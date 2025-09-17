@@ -1,0 +1,65 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+}
+/* Contenedor principal */
+.app {
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 16px;
+}
+
+/* Formulario */
+.form {
+  margin-bottom: 12px;
+}
+
+/* Input ancho */
+.form input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Tareas en fila y separadaa */
+.todo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* Para saber si la tarea esta hecha */
+.text.done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Botón de borrar (oculto por defecto) */
+.del {
+  margin-left: auto;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+/* El hover, cuando paso el raton por la tarea, muestro la opción de borrar */
+.todo:hover .del {
+  opacity: 1;
+  pointer-events: auto;
+}
