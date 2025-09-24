@@ -1,72 +1,62 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
-export default function Home() {
-  // Estado del texto que estoy escribiendo en el input
-  const [text, setText] = useState("");
-  // Estado de la lista de tareas (cada tarea: { id, text, done })
+const Home = () => {
+  // Estado para guardar lo que el usuario escribe en el input
+  const [inputValue, setInputValue] = useState("");
+
+  // Estado para guardar la lista de tareas)
   const [todos, setTodos] = useState([]);
 
-  // Función para agregar una tarea cuando pulso Enter
-  function add(e) {
-    e.preventDefault(); // Evito que el form recargue la página (como en la clase de Jose David)
-    const t = text.trim(); // Quito espacios al inicio y al final
-    if (!t) return; // Si ha quedado vacío, no agrego nada
-    // Agrego la nueva tarea al principio del array
-    setTodos([{ id: Date.now(), text: t, done: false }, ...todos]);
-    setText(""); // Limpio el input para escribir la siguiente tarea
-  }
-
-  // Función para marcar/desmarcar una tarea como hecha
-  function toggle(id) {
-    // Recorro todo el id con .map, cuando coincide, invierto el valor de done
-    setTodos(todos.map((x) => (x.id === id ? { ...x, done: !x.done } : x)));
-  }
-
-  // Función para eliminar una tarea por id
-  function removeItem(id) {
-    // Me quedo con todas menos la que tenga ese id
-    setTodos(todos.filter((x) => x.id !== id));
-  }
-
-  // La interfaz del TodoList
   return (
-    <div className="app">
-      <h1>TodoList</h1>
+    <div className="container">
+      <h1>ToDoList Sasha</h1>
 
-      {/* Formulario que añade las tareas al presionar Enter */}
-      <form className="form" onSubmit={add}>
-        <input
-          placeholder="Escribe y pulsa Enter"
-          value={text}
-          onChange={(e) => setText(e.target.value)} // Actualizo "text" cada vez que escribo
-        />
-      </form>
+      <ul>
+        {/* Primer li: el campo de entrada para añadir tareas */}
+        <li>
+          <input
+            type="text"
+            // Cada vez que el usuario escribe, actualizamos inputValue
+            onChange={(e) => setInputValue(e.target.value)}
+            // El valor del input siempre refleja el estado
+            value={inputValue}
+            // Si el usuario presiona "Enter", añadimos la tarea a la lista
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                // Agregamos la nueva tarea al arreglo de todos
+                setTodos(todos.concat([inputValue]));
+                // Limpiamos el input
+                setInputValue("");
+              }
+            }}
+            placeholder="Nueva tarea..."
+          />
+        </li>
 
-      {/* Si no hay tareas, muestro el mensaje. Si hay, muestro la lista */}
-      {todos.length === 0 ? (
-        <p>No hay tareas, añadir tareas</p> // Mensaje cuando la lista está vacía y no añadí nada
-      ) : (
-        <ul className="list">
-          {todos.map((item) => (
-            <li key={item.id} className="todo">
-              <input
-                type="checkbox"
-                checked={item.done} // Este checkbox refleja si la tarea está hecha o no
-                onChange={() => toggle(item.id)} // al marcar/desmarcar, invierto el estado done
-              />
-              {/* Si la tarea está hecha, agrego la clase done para tacharla con mi CSS */}
-              <span className={item.done ? "text done" : "text"}>
-                {item.text}
-              </span>
-              {/* Botón para borrar.
-                  Lo tengo oculto por defecto y solo aparece al pasar el ratón (hover). */}
-              <button className="del" onClick={() => removeItem(item.id)}>
-                🗑️
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
+        {/* Recorremos todas las tareas y las mostramos */}
+        {todos.map((item, index) => (
+          <li key={index}>
+            {/* Texto de la tarea */}
+            {item} {/* Botón de borrar con emoji 🗑️ */}
+            <span
+              style={{ cursor: "pointer" }} // para que se vea que se puede hacer clic
+              onClick={() =>
+                // Filtramos todas las tareas excepto la que coincide con el índice actual
+                setTodos(
+                  todos.filter((t, currentIndex) => index !== currentIndex)
+                )
+              }
+            >
+              🗑️
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Contador de tareas pendientes */}
+      <div>{todos.length} tareas pendientes</div>
     </div>
   );
-}
+};
+
+export default Home;
