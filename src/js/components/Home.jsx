@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 
 const Home = () => {
-  // Estado para guardar lo que el usuario escribe en el input
+  // Estado para guardar lo que escribo
   const [inputValue, setInputValue] = useState("");
 
-  // Estado para guardar la lista de tareas)
+  // Estado para guardar la lista de tareas
   const [todos, setTodos] = useState([]);
 
   return (
@@ -12,20 +12,20 @@ const Home = () => {
       <h1>ToDoList Sasha</h1>
 
       <ul>
-        {/* Primer li: el campo de entrada para añadir tareas */}
         <li>
           <input
             type="text"
-            // Cada vez que el usuario escribe, actualizamos inputValue
+            // Cada vez que escribo, se actualiza el inputValue
             onChange={(e) => setInputValue(e.target.value)}
-            // El valor del input siempre refleja el estado
             value={inputValue}
-            // Si el usuario presiona "Enter", añadimos la tarea a la lista
+            // Si presiono "Enter", añado la nueva tarea
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                // Agregamos la nueva tarea al arreglo de todos
-                setTodos(todos.concat([inputValue]));
-                // Limpiamos el input
+                const texto = inputValue.trim();
+                if (texto === "") return;
+
+                setTodos(todos.concat([texto]));
+
                 setInputValue("");
               }
             }}
@@ -33,28 +33,32 @@ const Home = () => {
           />
         </li>
 
-        {/* Recorremos todas las tareas y las mostramos */}
-        {todos.map((item, index) => (
+        {/* Si no hay tareas, muestro el mensaje pedido */}
+        {todos.length === 0 && (
+          <li className="empty">No hay tareas, añadir tareas</li>
+        )}
+
+        {todos.map((tarea, index) => (
           <li key={index}>
-            {/* Texto de la tarea */}
-            {item} {/* Botón de borrar con emoji 🗑️ */}
-            <span
-              style={{ cursor: "pointer" }} // para que se vea que se puede hacer clic
+            {tarea}
+            {/* Botón de eliminar tareas */}
+            <button
+              className="trash"
+              title="Eliminar"
               onClick={() =>
-                // Filtramos todas las tareas excepto la que coincide con el índice actual
                 setTodos(
-                  todos.filter((t, currentIndex) => index !== currentIndex)
+                  todos.filter((_, indiceActual) => index !== indiceActual)
                 )
               }
             >
               🗑️
-            </span>
+            </button>
           </li>
         ))}
       </ul>
 
       {/* Contador de tareas pendientes */}
-      <div>{todos.length} tareas pendientes</div>
+      <div className="counter">{todos.length} tareas pendientes</div>
     </div>
   );
 };
